@@ -39,19 +39,38 @@ install_dependencies() {
 # Function to install samba
 install_samba() {
     cd /usr/src/
+    
     wget -c ${SAMBA_LINK}
+   
     tar -xf ${SAMBA_PACK}
+    
     cd ${SAMBA_DIR}
+    
     ./configure --with-systemd --prefix=/usr/local/samba --enable-fhs
+    
     make && make install
+    
     echo "PATH=$PATH:/usr/local/samba/bin:/usr/local/samba/sbin" >> /root/.bashrc
+    
     source /root/.bashrc
+    
     cp -v /usr/src/${SAMBA_DIR}/bin/default/packaging/systemd/samba.service /etc/systemd/system/samba-ad-dc.service
+    
+    mkdir -v /usr/local/samba/etc/sysconfig
+
+    echo 'SAMBAOPTIONS="-D"' > /usr/local/samba/etc/sysconfig/samba
+
+    systemctl daemon-reload
+
 }
 
 # Function to provision samba AD
 provision_samba() {
-    samba-tool domain provision --use-rfc2307 --interactive
+    samba-tool domain provision --use-rfc2307 --realm=$FQDN --domain=${FQDN%%.*}
+    
+    rm /etc/krb5.conf
+
+    cp -bv /usr/local/samba/var/lib/samba/private/krb5.conf /etc/krb5.conf
 }
 
 # Function to enable samba service
