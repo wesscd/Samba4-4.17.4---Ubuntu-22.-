@@ -1,0 +1,6 @@
+crontab -e
+
+0 0 * * * find /SMB/PROFILES/DIR/*/*/Downloads -type f -mtime +30 -delete
+
+# Adicionar ao crontab para apagar arquivos com mais de 30 dias de dentro da pasta downloads.
+# Este script funciona apenas em perfis moveis.
