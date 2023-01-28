@@ -66,9 +66,9 @@ install_samba() {
 
 # Function to provision samba AD
 provision_samba() {
-    samba-tool domain provision --use-rfc2307 --realm=$FQDN --domain=${FQDN%%.*}
+    samba-tool domain provision --use-rfc2307 --realm=HAGNUSDEI.INTRA --domain=HAGNUSDEI
     
-    rm /etc/krb5.conf
+    # rm /etc/krb5.conf
 
     cp -bv /usr/local/samba/var/lib/samba/private/krb5.conf /etc/krb5.conf
 }
@@ -91,16 +91,6 @@ uninstall_samba() {
     sed -i '/samba/d' /root/.bashrc
     apt-get remove -y samba
 }
-
-# Function to configure hostname and DNS
-configure_hostname_dns() {
-    echo "Enter FQDN (Fully Qualified Domain Name) : "
-    read FQDN
-    hostnamectl set-hostname $FQDN
-    IP_ADDRESS=$(hostname -I | awk '{print $1}')
-    echo "$IP_ADDRESS $FQDN ${FQDN%%.*}" >> /etc/hosts
-}
-
 
 # Main function
 main() {
