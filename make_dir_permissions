@@ -1,0 +1,27 @@
+# Define a lista de pastas
+pastas=(
+"GRP_ADMINISTRADOR"
+"GRP_AUDITOR"
+"GRP_COMPRAS"
+"GRP_DEINFO"
+"GRP_ENFERMAGEM"
+"GRP_FARMACIA"
+"GRP_FATURAMENTO"
+"GRP_HIGIENIZACAO"
+"GRP_MEDICO"
+"GRP_NUTRICAO"
+"GRP_RECEPCAO"
+"GRP_RH")
+
+# Cria as pastas
+for i in "${!pastas[@]}"
+do
+    mkdir -p -v -m 1770 "${pastas[i]}"
+    chgrp -v "HAGNUSDEI\domain users" "${pastas[i]}"
+
+    if [ $? -eq 0 ]; then
+        echo "Pasta ${pastas[i]} criada com sucesso"
+    else
+        echo "Erro ao criar a pasta ${pastas[i]}"
+    fi
+done
